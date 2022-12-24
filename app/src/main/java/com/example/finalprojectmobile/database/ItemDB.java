@@ -29,21 +29,21 @@ public class ItemDB {
         db.close();
     }
 
-    //Read
-    public ArrayList<Item> getAllItems(){
+    // Read
+    public ArrayList<Item> getAllItems(String id){
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery(
-                String.format("SELECT * FROM %s JOIN %s ON %s = %s",
+                String.format("SELECT * FROM %s JOIN %s ON %s = %s WHERE user_id=?",
                         DBHelper.TABLE_ITEM,
                         DBHelper.TABLE_USER,
                         DBHelper.TABLE_USER + "." + DBHelper.FIELD_USER_ID,
                         DBHelper.TABLE_ITEM + "." + DBHelper.FIELD_FOREIGN_USER_ID)
-                , null);
+                , new String[]{String.valueOf(id)});
         ArrayList<Item> itemsArrayList= new ArrayList<>();
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
                 // User
-                int userId = cursor.getInt(cursor.getColumnIndexOrThrow(DBHelper.FIELD_USER_ID));
+                String userId = cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.FIELD_USER_ID));
                 String username = cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.FIELD_USER_NAME));
                 String email = cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.FIELD_USER_EMAIL));
                 byte[] profilePic = cursor.getBlob(cursor.getColumnIndexOrThrow(DBHelper.FIELD_USER_PROFILE_PIC));

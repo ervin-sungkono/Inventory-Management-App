@@ -1,22 +1,22 @@
 package com.example.finalprojectmobile.models;
 
 public class User {
-    private int id;
+    private String id;
     private String username, email;
     private byte[] profilePic;
 
-    public User(int id, String username, String email, byte[] profilePic) {
+    public User(String id, String username, String email, byte[] profilePic) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.profilePic = profilePic;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

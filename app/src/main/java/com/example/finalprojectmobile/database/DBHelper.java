@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 public class DBHelper extends SQLiteOpenHelper {
     // Database Configuration
     private static final String DB_NAME = "inventoryDB";
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 3;
 
     // Table Names
     public static final String TABLE_USER = "users";
@@ -32,14 +32,14 @@ public class DBHelper extends SQLiteOpenHelper {
     // Create Table Query
     private static final String CREATE_TABLE_USER =
             "CREATE TABLE IF NOT EXISTS " + TABLE_USER + "(" +
-                FIELD_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                FIELD_USER_ID + " TEXT PRIMARY KEY," +
                 FIELD_USER_NAME + " TEXT UNIQUE," +
                 FIELD_USER_EMAIL + " TEXT UNIQUE," +
                 FIELD_USER_PROFILE_PIC + " BLOB)";
     private static final String CREATE_TABLE_ITEM =
             "CREATE TABLE IF NOT EXISTS " + TABLE_ITEM + "(" +
                 FIELD_ITEM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                FIELD_FOREIGN_USER_ID + " INTEGER REFERENCES " + TABLE_USER + "," +
+                FIELD_FOREIGN_USER_ID + " TEXT REFERENCES " + TABLE_USER + "," +
                 FIELD_ITEM_NAME + " TEXT," +
                 FIELD_ITEM_DESC + " TEXT," +
                 FIELD_ITEM_QTY + " INTEGER," +
