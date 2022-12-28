@@ -25,10 +25,6 @@ public class RegisterFragment extends Fragment {
     Button registerButton;
     UserDB userDB;
 
-    public RegisterFragment(){
-
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

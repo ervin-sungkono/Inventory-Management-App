@@ -1,8 +1,6 @@
 package com.example.finalprojectmobile.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,18 +9,18 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.example.finalprojectmobile.R;
-import com.example.finalprojectmobile.adapters.ItemAdapter;
-import com.example.finalprojectmobile.database.ItemDB;
-import com.example.finalprojectmobile.models.Item;
+import com.example.finalprojectmobile.fragments.HomeFragment;
+import com.example.finalprojectmobile.fragments.ProfileFragment;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    ArrayList<Item> itemsArrayList;
-    RecyclerView rvItems;
-    ItemAdapter itemAdapter;
-    ItemDB itemDB;
     FirebaseAuth mAuth;
     FirebaseAuth.AuthStateListener authStateListener = firebaseAuth -> {
         if (firebaseAuth.getCurrentUser() == null){
@@ -30,6 +28,9 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
     };
+    BottomNavigationView bottomNavigationView;
+    FloatingActionButton fabButton;
+    GoogleSignInClient googleSignInClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,41 +40,31 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mAuth.addAuthStateListener(authStateListener);
 
-        itemDB = new ItemDB(this);
+        googleSignInClient = GoogleSignIn.getClient(MainActivity.this
+                , GoogleSignInOptions.DEFAULT_SIGN_IN);
 
-        itemsArrayList = new ArrayList<>();
-        itemsArrayList.add(new Item(
-                1,
-                null,
-                "Test Item",
-                "Just another description",
-                2,
-                null
-        ));
-        itemsArrayList.add(new Item(
-                2,
-                null,
-                "Test Item 2",
-                "Just another description",
-                2,
-                null
-        ));
-        itemsArrayList.add(new Item(
-                3,
-                null,
-                "Test Item 3",
-                "Just another description",
-                2,
-                null
-        ));
+        bottomNavigationView = findViewById(R.id.bottomNav);
+        fabButton = findViewById(R.id.fab);
 
-        rvItems = findViewById(R.id.rv_items);
-        itemAdapter = new ItemAdapter(itemsArrayList, this);
+        bottomNavigationView.setBackground(null);
+        bottomNavigationView.getMenu().getItem(1).setEnabled(false);
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.home:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
+                    return true;
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+                case R.id.profile:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new ProfileFragment()).commit();
+                    return true;
+            }
+            return false;
+        });
+        bottomNavigationView.setSelectedItemId(R.id.home);
 
-        rvItems.setLayoutManager(linearLayoutManager);
-        rvItems.setAdapter(itemAdapter);
+        fabButton.setOnClickListener(view -> {
+            startActivity(new Intent(MainActivity.this, InsertActivity.class));
+        });
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -84,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.logout){
+            if(googleSignInClient != null) googleSignInClient.signOut();
             mAuth.signOut();
             return true;
         }

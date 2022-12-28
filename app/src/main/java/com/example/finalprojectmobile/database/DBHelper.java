@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 public class DBHelper extends SQLiteOpenHelper {
     // Database Configuration
     private static final String DB_NAME = "inventoryDB";
-    private static final int DB_VERSION = 3;
+    private static final int DB_VERSION = 15;
 
     // Table Names
     public static final String TABLE_USER = "users";
@@ -31,19 +31,20 @@ public class DBHelper extends SQLiteOpenHelper {
 
     // Create Table Query
     private static final String CREATE_TABLE_USER =
-            "CREATE TABLE IF NOT EXISTS " + TABLE_USER + "(" +
+            "CREATE TABLE " + TABLE_USER + "(" +
                 FIELD_USER_ID + " TEXT PRIMARY KEY," +
-                FIELD_USER_NAME + " TEXT UNIQUE," +
-                FIELD_USER_EMAIL + " TEXT UNIQUE," +
+                FIELD_USER_NAME + " TEXT," +
+                FIELD_USER_EMAIL + " TEXT," +
                 FIELD_USER_PROFILE_PIC + " BLOB)";
     private static final String CREATE_TABLE_ITEM =
-            "CREATE TABLE IF NOT EXISTS " + TABLE_ITEM + "(" +
+            "CREATE TABLE " + TABLE_ITEM + "(" +
                 FIELD_ITEM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                FIELD_FOREIGN_USER_ID + " TEXT REFERENCES " + TABLE_USER + "," +
+                FIELD_FOREIGN_USER_ID + " TEXT," +
                 FIELD_ITEM_NAME + " TEXT," +
                 FIELD_ITEM_DESC + " TEXT," +
                 FIELD_ITEM_QTY + " INTEGER," +
-                FIELD_ITEM_IMAGE + " BLOB)";
+                FIELD_ITEM_IMAGE + " BLOB," +
+                "FOREIGN KEY(" + FIELD_FOREIGN_USER_ID + ") REFERENCES " + TABLE_USER + "(" + FIELD_USER_ID + "))";
 
     // Drop Table Query
     private static final String DROP_TABLE_USER = "DROP TABLE IF EXISTS " + TABLE_USER;
@@ -63,7 +64,6 @@ public class DBHelper extends SQLiteOpenHelper {
         super(context, DB_NAME, null, DB_VERSION);
     }
 
-
     @Override
     public void onConfigure(SQLiteDatabase db) {
         super.onConfigure(db);
@@ -78,8 +78,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
-        db.execSQL(DROP_TABLE_USER);
         db.execSQL(DROP_TABLE_ITEM);
+        db.execSQL(DROP_TABLE_USER);
         onCreate(db);
     }
 }

@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Final Project Mobile</string>
     <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="lorem">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam malesuada, urna et pellentesque vehicula, leo lectus facilisis lacus, a auctor tortor sem vitae metus. Morbi dignissim mollis nunc eu pellentesque. Maecenas blandit mattis libero, tristique luctus est venenatis vel. Nunc luctus est nibh. Nulla facilisi. Sed congue turpis at dignissim euismod. Sed ipsum purus, faucibus at neque quis, viverra bibendum nisi.
+    </string>
 </resources>

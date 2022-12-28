@@ -1,8 +1,9 @@
 package com.example.finalprojectmobile.adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +16,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.finalprojectmobile.ImageHelper;
 import com.example.finalprojectmobile.R;
+import com.example.finalprojectmobile.activities.DetailActivity;
+import com.example.finalprojectmobile.activities.EditItemActivity;
 import com.example.finalprojectmobile.database.ItemDB;
 import com.example.finalprojectmobile.models.Item;
 
@@ -44,25 +48,47 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.viewHolder>{
         Item i = itemsArrayList.get(position);
         holder.tvName.setText(i.getName());
         holder.tvQuantity.setText("Qty: " + i.getQuantity());
-        setImageViewWithByteArray(holder.ivThumbnail, i.getImage());
-        holder.editButton.setOnClickListener(v->{
-            // Edit Button Logic
-            Toast.makeText(context, "Edit Button " + position, Toast.LENGTH_SHORT).show();
-        });
-        holder.deleteButton.setOnClickListener(v->{
-            // Delete Button Logic
-            Toast.makeText(context, "Delete Button " + position, Toast.LENGTH_SHORT).show();
-        });
-        holder.detailButton.setOnClickListener(v->{
-            // Detail Button Logic
-            Toast.makeText(context, "Detail Button " + position, Toast.LENGTH_SHORT).show();
-        });
-    }
+        ImageHelper.setImageViewWithByteArray(holder.ivThumbnail, i.getImage());
 
-    public static void setImageViewWithByteArray(ImageView view, byte[] data) {
-        if(data == null) return;
-        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-        view.setImageBitmap(bitmap);
+        Bundle itemBundle = new Bundle();
+        itemBundle.putInt("itemId", i.getId());
+        itemBundle.putString("itemName", i.getName());
+        itemBundle.putString("itemDesc", i.getDescription());
+        itemBundle.putInt("itemQty", i.getQuantity());
+        itemBundle.putByteArray("itemImage", i.getImage());
+
+        holder.detailButton.setOnClickListener(v->{
+            Intent detailIntent = new Intent(context, DetailActivity.class);
+            detailIntent.putExtras(itemBundle);
+            context.startActivity(detailIntent);
+        });
+
+        holder.editButton.setOnClickListener(v -> {
+            Intent updateIntent = new Intent(context, EditItemActivity.class);
+            updateIntent.putExtras(itemBundle);
+            context.startActivity(updateIntent);
+        });
+
+        holder.deleteButton.setOnClickListener(v -> {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+            alertDialogBuilder
+                    .setTitle("Delete \"" + i.getName() + "\" from your inventory?")
+                    .setCancelable(false)
+                    .setPositiveButton("Delete", (dialog, which) -> {
+                        if(itemDB.deleteItem(i.getId()) > 0){
+                            itemsArrayList.remove(position);
+                            Toast.makeText(context, "Delete success!", Toast.LENGTH_SHORT).show();
+                            notifyDataSetChanged();
+                        }else{
+                            Toast.makeText(context, "Fail to delete item.", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .setNegativeButton("Cancel", (dialog, which) -> {
+                        dialog.cancel();
+                    });
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+        });
     }
 
     @Override
@@ -78,17 +104,17 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.viewHolder>{
     class viewHolder extends RecyclerView.ViewHolder{
         TextView tvName, tvQuantity;
         ImageView ivThumbnail;
-        ImageButton editButton, deleteButton;
         Button detailButton;
+        ImageButton editButton, deleteButton;
 
         public viewHolder(@NonNull View itemView) {
             super(itemView);
             tvName = itemView.findViewById(R.id.tv_name);
             tvQuantity = itemView.findViewById(R.id.tv_quantity);
             ivThumbnail = itemView.findViewById(R.id.iv_thumbnail);
+            detailButton = itemView.findViewById(R.id.detail_btn);
             editButton = itemView.findViewById(R.id.edit_btn);
             deleteButton = itemView.findViewById(R.id.delete_btn);
-            detailButton = itemView.findViewById(R.id.detail_btn);
         }
     }
 }

@@ -1,12 +1,11 @@
 package com.example.finalprojectmobile.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
-
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -22,8 +21,7 @@ import com.example.finalprojectmobile.models.Item;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-
-public class InsertActivity extends AppCompatActivity{
+public class EditItemActivity extends AppCompatActivity {
     EditText itemNameField, itemQtyField, itemDescField;
     Button uploadButton, submitButton;
     ImageView previewImage;
@@ -47,9 +45,7 @@ public class InsertActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_insert);
-
-        imageFile = null;
+        setContentView(R.layout.activity_edit_item);
 
         itemNameField = findViewById(R.id.et_item_name);
         itemQtyField = findViewById(R.id.et_item_qty);
@@ -57,6 +53,20 @@ public class InsertActivity extends AppCompatActivity{
         previewImage = findViewById(R.id.iv_preview);
         uploadButton = findViewById(R.id.upload_btn);
         submitButton = findViewById(R.id.submit_btn);
+
+        Intent mIntent = getIntent();
+        Bundle detailBundle = mIntent.getExtras();
+
+        int itemId = detailBundle.getInt("itemId", 0);
+        String itemName = detailBundle.getString("itemName", "");
+        String itemDesc = detailBundle.getString("itemDesc", "");
+        int itemQty = detailBundle.getInt("itemQty", 0);
+        imageFile = detailBundle.getByteArray("itemImage");
+
+        itemNameField.setText(itemName);
+        itemDescField.setText(itemDesc);
+        itemQtyField.setText(String.valueOf(itemQty));
+        ImageHelper.setImageViewWithByteArray(previewImage, imageFile);
 
         uploadButton.setOnClickListener(v->{
             Intent iGallery = new Intent(Intent.ACTION_PICK);
@@ -79,13 +89,13 @@ public class InsertActivity extends AppCompatActivity{
             }else if(Integer.parseInt(quantity) <= 0){
                 Toast.makeText(this, "Quantity must be greater than 0.", Toast.LENGTH_SHORT).show();
             }else{
-                Item item = new Item(0, currentUser.getUid(), name, description, Integer.parseInt(quantity), imageFile);
-                if(itemDB.updateItem(item) != -1){
-                    Toast.makeText(this, "Item added!", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(InsertActivity.this, MainActivity.class));
+                Item item = new Item(itemId, currentUser.getUid(), name, description, Integer.parseInt(quantity), imageFile);
+                if(itemDB.updateItem(item) > 0){
+                    Toast.makeText(this, "Item updated!", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(EditItemActivity.this, MainActivity.class));
                     finish();
                 }else{
-                    Toast.makeText(this, "Fail to add item.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Fail to update item.", Toast.LENGTH_SHORT).show();
                 }
             }
         });

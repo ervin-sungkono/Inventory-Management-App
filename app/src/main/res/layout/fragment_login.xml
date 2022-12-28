@@ -8,11 +8,12 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         tools:context=".fragments.LoginFragment"
         android:orientation="vertical"
-        android:gravity="center">
+        android:gravity="center"
+        android:padding="16dp">
 
         <LinearLayout
             android:id="@+id/header_title"
@@ -37,7 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginTop="32dp">
+            android:layout_marginTop="24dp">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layout_email"
@@ -45,13 +46,14 @@
                 android:layout_height="wrap_content"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 app:boxStrokeColor="@color/blue_200"
-                app:hintTextColor="@color/blue_500"
-                >
+                app:hintTextColor="@color/blue_500">
                 <EditText
                     android:id="@+id/et_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Email"
+                    android:inputType="textEmailAddress"
+                    android:autofillHints="emailAddress"
                     android:backgroundTint="@color/white"/>
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -80,15 +82,32 @@
             android:layout_height="wrap_content"
             android:text="Forgot password?"
             android:textColor="@color/blue_500"
-            android:layout_marginTop="32dp" />
+            android:layout_marginTop="24dp" />
 
         <Button
             android:id="@+id/login_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Login"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="24dp"
             android:paddingVertical="12dp"/>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Or"
+            android:layout_marginTop="8dp"
+            android:textAlignment="center"/>
+
+        <Button
+            android:id="@+id/login_google_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:paddingVertical="12dp"
+            android:paddingHorizontal="24dp"
+            android:backgroundTint="@color/black"
+            android:text="Login with google"
+            android:drawableLeft="@drawable/googleg_standard_color_18" />
     </LinearLayout>
 </ScrollView>

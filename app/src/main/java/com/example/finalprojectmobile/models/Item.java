@@ -1,14 +1,14 @@
 package com.example.finalprojectmobile.models;
 
 public class Item {
-    private User user;
+    private String userId;
     private String name, description;
     private int id, quantity;
     private byte[] image;
 
-    public Item(int id, User user, String name, String description, int quantity, byte[] image) {
+    public Item(int id, String userId, String name, String description, int quantity, byte[] image) {
         this.id = id;
-        this.user = user;
+        this.userId = userId;
         this.name = name;
         this.description = description;
         this.quantity = quantity;
@@ -23,12 +23,12 @@ public class Item {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getName() {
