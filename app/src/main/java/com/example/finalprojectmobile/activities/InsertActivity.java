@@ -80,7 +80,7 @@ public class InsertActivity extends AppCompatActivity{
                 Toast.makeText(this, "Quantity must be greater than 0.", Toast.LENGTH_SHORT).show();
             }else{
                 Item item = new Item(0, currentUser.getUid(), name, description, Integer.parseInt(quantity), imageFile);
-                if(itemDB.updateItem(item) != -1){
+                if(itemDB.insertItem(item) != -1){
                     Toast.makeText(this, "Item added!", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(InsertActivity.this, MainActivity.class));
                     finish();
